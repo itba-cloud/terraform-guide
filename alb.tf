@@ -5,7 +5,7 @@ module "alb" {
   security_group_ids = [aws_security_group.alb.id]
   vpc_id      = module.vpc.vpc_id
   alb_name =  "web-server-lb"
-  web_server_port = var.server_port
+  # web_server_port = var.server_port
 }
 
 resource "aws_security_group" "alb" {

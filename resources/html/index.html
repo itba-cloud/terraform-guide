@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+    <head>
+        <title>ITBA - Cloud</title>
+        <div align="center">
+            <!-- Esta es mi función -->
+            <script>
+                function getImage() {
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function () {
+                        if (this.readyState == 4 && this.status == 200) {
+                            document.getElementById("replace").innerHTML = this.responseText;
+                        }
+                    };
+
+                xhttp.open("GET", ${ENDPOINT}, true);
+                xhttp.send();   
+                }
+            </script>
+    </head>
+        <!-- Este es mi código -->
+        <br><br>
+        <body bgcolor="#FFFFFF" text="Black">
+            <h1><span id="replace">Bienvenidos, estimados Alumnos.</span></h1>
+            
+            <button onclick="getImage()">Pinchame</button>
+            <br><br>
+            <img src="images/image1.png" , width=35%, height=35%>
+
+            <p>Este lab está desarrollado por la cátedra de Cloud Computing</p>
+        </body>
+    </div>
+
+</html>

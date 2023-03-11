@@ -1,5 +1,4 @@
-variable "server_port" {
-  description = "The port the server will use for HTTP requests"
-  type        = number
-  default     = 8080
+variable "ws_bucket_name" {
+  description = "The website bucket's name"
+  type        = string
 }
