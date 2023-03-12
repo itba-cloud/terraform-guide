@@ -9,48 +9,54 @@ locals {
   bucket_name = "static-site-${random_pet.this.id}"
 }
 
-resource "aws_s3_bucket" "this" {
-    # provider = aws.aws
+module "site_bucket" {
+  source = "terraform-aws-modules/s3-bucket/aws"
 
-    bucket              = local.bucket_name
-    object_lock_enabled = false
-}
+  force_destroy = true
+  bucket        = local.bucket_name
 
-resource "aws_s3_bucket_policy" "this" {
-    # provider = aws.aws
+  # Bucket policies
+  attach_policy = true
+  policy        = data.aws_iam_policy_document.site.json
+  # attach_deny_insecure_transport_policy = true
+  # attach_require_latest_tls_policy      = true
 
-    bucket = aws_s3_bucket.this.id
-    policy = data.aws_iam_policy_document.this.json
-}
+  # S3 bucket-level Public Access Block configuration
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 
-resource "aws_s3_bucket_website_configuration" "this" {
-    # provider = aws.aws
+  acl = "public-read" # "acl" conflicts with "grant" and "owner"
 
-    bucket = aws_s3_bucket.this.id
+  versioning = {
+    status     = true
+    mfa_delete = false
+  }
 
-    index_document {
-        suffix = "index.html"
+  website = {
+    index_document = "index.html"
+    error_document = "error.html"
+  }
+
+
+  server_side_encryption_configuration = {
+    rule = {
+      apply_server_side_encryption_by_default = {
+        sse_algorithm = "AES256"
+      }
     }
-
-    error_document {
-        key = "error.html"
-    }
-}
-
-resource "aws_s3_bucket_acl" "this" {
-    # provider = aws.aws
-
-    bucket = aws_s3_bucket.this.id
-    acl    = "public-read"
+  }
 }
 
 resource "aws_s3_object" "data" {
   for_each = { for file in local.file_with_type : "${file.file_name}.${file.mime}" => file }
 
-  bucket       = aws_s3_bucket.this.id
+  bucket       = module.site_bucket.s3_bucket_id
   key          = each.value.file_name
   
   source       = "${var.static_resources}/${each.value.file_name}"
   etag         = filemd5("${var.static_resources}/${each.value.file_name}")
   content_type = each.value.mime
 }
+

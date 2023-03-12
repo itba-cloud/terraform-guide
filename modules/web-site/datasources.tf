@@ -1,5 +1,4 @@
-data "aws_iam_policy_document" "this" {
-    # provider     = aws.aws
+data "aws_iam_policy_document" "site" {
 
     statement {
         sid = "PublicReadGetObject"
@@ -9,6 +8,6 @@ data "aws_iam_policy_document" "this" {
             type        = "AWS"
             identifiers = ["*"]
         }
-        resources = ["${aws_s3_bucket.this.arn}/*"]
+        resources = ["${module.site_bucket.s3_bucket_arn}/*"]
     }
 }
