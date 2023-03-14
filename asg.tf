@@ -1,30 +1,13 @@
-data "aws_ami" "ubuntu" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  owners = ["099720109477"] # Canonical
-}
-
-
 module "asg" {
   source = "./modules/asg"
 
-  ami = data.aws_ami.ubuntu.id
-  instance_type = "t2.micro"
+  ami = local.aws_ec2_ami
+  instance_type = local.aws_ec2_type
 
   subnet_ids  = module.vpc.public_subnets_ids
   security_group_ids = [aws_security_group.this.id]
   lb_arn = module.alb.alb_arn
-  user_data = local.web_user_data
+  user_data = filebase64(local.aws_ec2_web_user_data)
   instance_name =  "web-server"
   asg_name =  "asg-web-server"
 }
@@ -38,10 +21,37 @@ resource "aws_security_group" "this" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+   ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  egress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # ingress {
+  #   from_port   = 80
+  #   to_port     = 80
+  #   protocol    = "tcp"
+  #   cidr_blocks = ["0.0.0.0/0"]
+  # }
+  # egress {
+  #   from_port   = 80
+  #   to_port     = 80
+  #   protocol    = "tcp"
+  #   cidr_blocks = ["0.0.0.0/0"]
+  # }
 }

@@ -22,5 +22,5 @@ variable "alb_name" {
 variable "web_server_port" {
   description = "port to locate the server"
   type        = string
-  default     = "8080"
+  default     = "80"
 }
