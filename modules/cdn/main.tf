@@ -28,40 +28,6 @@ resource "aws_cloudfront_distribution" "this" {
     min_ttl                = 0
   }
 
-  # # Cache behavior with precedence 0
-  # ordered_cache_behavior {
-  #   path_pattern     = "/api/*"
-  #   allowed_methods  = ["HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH"]
-  #   cached_methods   = ["GET", "HEAD", "OPTIONS"]
-  #   target_origin_id = local.origin_id["api"].name
-
-  #   forwarded_values {
-  #     query_string = true
-  #     headers = ["Accept-Charset"
-  #       ,"Authorization"
-  #       ,"Origin"
-  #       ,"Accept"
-  #       ,"Access-Control-Request-Method"
-  #       ,"Access-Control-Request-Header"
-  #       ,"Referer"
-  #       ,"Accept-Language"
-  #       ,"Accept-Encoding"
-  #       ,"Accept-Datetime"
-  #       ]
-  #     cookies {
-  #       forward = "none"
-  #     }
-  #   }
-
-  #   min_ttl                = 0
-  #   default_ttl            = 0
-  #   max_ttl                = 0
-  #   compress               = true
-  #   viewer_protocol_policy = "redirect-to-https"
-
-  # }
-
-  price_class = "PriceClass_100"
 
   restrictions {
     geo_restriction {
