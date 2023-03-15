@@ -5,6 +5,6 @@ output "domain_name" {
 }
 
 output "arn" {
-  description = "buckeet domain name"
+  description = "bucket arn"
   value       = module.site_bucket.s3_bucket_arn
 }

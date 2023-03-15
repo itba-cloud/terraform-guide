@@ -1,7 +1,6 @@
 module "web-site" {
   source = "./modules/web-site"
 
-  bucket_name  = var.ws_bucket_name
   static_resources   = local.static_resources
-  
+  bucket_access_OAI = [module.cdn.static_site_OAIs_arn]
 }

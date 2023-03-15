@@ -10,5 +10,5 @@ locals {
 
   static_resources = "resources"
 
-  base_domain = "cloud.isagues.ar"
+  app_domain = var.base_domain
 }

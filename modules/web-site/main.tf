@@ -6,7 +6,21 @@ resource "random_pet" "this" {
 }
 
 locals {
-  bucket_name = "static-site-${random_pet.this.id}"
+  bucket_name = "web-site-${random_pet.this.id}"
+}
+
+data "aws_iam_policy_document" "site" {
+  statement {
+    sid = "PublicReadGetObject"
+    actions   = ["s3:GetObject"]
+    resources = ["arn:aws:s3:::${local.bucket_name}/*"]
+    effect = "Allow"
+
+    principals {
+      type        = "AWS"
+      identifiers = var.bucket_access_OAI
+    }
+  }
 }
 
 module "site_bucket" {
@@ -27,7 +41,7 @@ module "site_bucket" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 
-  acl = "public-read" # "acl" conflicts with "grant" and "owner"
+  acl = "private" # "acl" conflicts with "grant" and "owner"
 
   versioning = {
     status     = true
