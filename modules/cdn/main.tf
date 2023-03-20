@@ -13,6 +13,18 @@ resource "aws_cloudfront_distribution" "this" {
     }
   }
 
+  origin {
+    domain_name = var.bucket_domain_name
+    origin_id   = local.origin_id["alb"].name
+
+    custom_origin_config {
+      origin_protocol_policy = "https-only"
+      origin_ssl_protocols   = ["TLSv1.2"]
+      https_port             = 443
+      http_port              = 80
+    }
+  }
+
   enabled             = true
   is_ipv6_enabled     = false
   comment             = "cdn"
@@ -26,6 +38,38 @@ resource "aws_cloudfront_distribution" "this" {
     cache_policy_id        = data.aws_cloudfront_cache_policy.optimized.id
     viewer_protocol_policy = "redirect-to-https"
     min_ttl                = 0
+  }
+
+  ordered_cache_behavior {
+    path_pattern     = "/alb/*"
+    allowed_methods  = ["HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH"]
+    cached_methods   = ["GET", "HEAD", "OPTIONS"]
+    target_origin_id = local.origin_id["alb"].name
+
+    forwarded_values {
+      query_string = true
+      headers = ["Accept-Charset"
+        ,"Authorization"
+        ,"Origin"
+        ,"Accept"
+        ,"Access-Control-Request-Method"
+        ,"Access-Control-Request-Header"
+        ,"Referer"
+        ,"Accept-Language"
+        ,"Accept-Encoding"
+        ,"Accept-Datetime"
+        ]
+      cookies {
+        forward = "none"
+      }
+    }
+
+    min_ttl                = 0
+    default_ttl            = 0
+    max_ttl                = 0
+    compress               = true
+    viewer_protocol_policy = "redirect-to-https"
+
   }
 
 

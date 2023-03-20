@@ -10,5 +10,6 @@ locals {
 
   static_resources = "resources"
 
-  app_domain = var.base_domain
+  web_site_domain = var.web_site_domain
+  alb_domain_name = var.alb_domain_name
 }

@@ -3,7 +3,12 @@ variable "aws_region" {
   type        = string
 }
 
-variable "base_domain" {
-  description = "The app base_domain"
+variable "web_site_domain" {
+  description = "The web site domain"
+  type        = string
+}
+
+variable "alb_domain_name" {
+  description = "The alb domain name"
   type        = string
 }

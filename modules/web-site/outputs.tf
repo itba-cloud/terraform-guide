@@ -1,7 +1,7 @@
 # Output variable definitions
-output "domain_name" {
+output "s3_bucket_website_domain" {
   description = "buckeet domain name"
-  value       = module.site_bucket.s3_bucket_bucket_domain_name
+  value       = module.site_bucket.s3_bucket_website_domain
 }
 
 output "arn" {

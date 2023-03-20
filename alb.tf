@@ -5,6 +5,8 @@ module "alb" {
   security_group_ids = [aws_security_group.alb.id]
   vpc_id      = module.vpc.vpc_id
   alb_name =  "web-server-lb"
+  domain_name = local.alb_domain_name
+  certificate = module.certificate.arn
   # web_server_port = var.server_port
 }
 
