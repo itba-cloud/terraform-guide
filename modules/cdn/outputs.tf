@@ -7,5 +7,5 @@ output "cloudfront_distribution" {
 
 output "web_site_OAIs_arn" {
   description = "OAI used for web site"
-  value = aws_cloudfront_origin_access_identity.this["web-site"].iam_arn
+  value = aws_cloudfront_origin_access_identity.oai.iam_arn
 }

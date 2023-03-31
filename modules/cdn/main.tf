@@ -1,3 +1,7 @@
+resource "aws_cloudfront_origin_access_identity" "oai" {
+  comment = "OAI for ${var.domain_name}"
+}
+
 data "aws_cloudfront_cache_policy" "optimized" {
   name = "Managed-CachingOptimized"
 }
@@ -5,23 +9,23 @@ data "aws_cloudfront_cache_policy" "optimized" {
 resource "aws_cloudfront_distribution" "this" {
   # Si se usa www hay problemas de permisos, la policy dice que solo cloudfront lee pega a site
   origin {
-    domain_name = var.bucket_domain_name
-    origin_id   = local.origin_id["web-site"].name
+    domain_name = var.bucket_regional_domain_name
+    origin_id   = var.bucket_id
 
     s3_origin_config {
-      origin_access_identity = aws_cloudfront_origin_access_identity.this["web-site"].cloudfront_access_identity_path
+      origin_access_identity = aws_cloudfront_origin_access_identity.oai.cloudfront_access_identity_path
     }
   }
 
   origin {
-    domain_name = var.bucket_domain_name
-    origin_id   = local.origin_id["alb"].name
+    domain_name = var.alb_dns_name
+    origin_id   = var.alb_dns_name
 
     custom_origin_config {
-      origin_protocol_policy = "https-only"
-      origin_ssl_protocols   = ["TLSv1.2"]
-      https_port             = 443
       http_port              = 80
+      https_port             = 443
+      origin_protocol_policy = "http-only"
+      origin_ssl_protocols   = ["TLSv1.2"]
     }
   }
 
@@ -34,33 +38,29 @@ resource "aws_cloudfront_distribution" "this" {
   default_cache_behavior {
     allowed_methods        = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods         = ["GET", "HEAD"]
-    target_origin_id       = local.origin_id["web-site"].name
+    target_origin_id       = var.bucket_id
     cache_policy_id        = data.aws_cloudfront_cache_policy.optimized.id
     viewer_protocol_policy = "redirect-to-https"
-    min_ttl                = 0
+    forwarded_values {
+      headers      = []
+      query_string = true
+      cookies {
+        forward = "all"
+      }
+    }
   }
 
   ordered_cache_behavior {
     path_pattern     = "/alb/*"
     allowed_methods  = ["HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH"]
     cached_methods   = ["GET", "HEAD", "OPTIONS"]
-    target_origin_id = local.origin_id["alb"].name
+    target_origin_id = var.alb_dns_name
 
     forwarded_values {
+      headers      = []
       query_string = true
-      headers = ["Accept-Charset"
-        ,"Authorization"
-        ,"Origin"
-        ,"Accept"
-        ,"Access-Control-Request-Method"
-        ,"Access-Control-Request-Header"
-        ,"Referer"
-        ,"Accept-Language"
-        ,"Accept-Encoding"
-        ,"Accept-Datetime"
-        ]
       cookies {
-        forward = "none"
+        forward = "all"
       }
     }
 
@@ -68,7 +68,7 @@ resource "aws_cloudfront_distribution" "this" {
     default_ttl            = 0
     max_ttl                = 0
     compress               = true
-    viewer_protocol_policy = "redirect-to-https"
+    viewer_protocol_policy = "allow-all"
 
   }
 
@@ -88,8 +88,4 @@ resource "aws_cloudfront_distribution" "this" {
   }
 }
 
-resource "aws_cloudfront_origin_access_identity" "this" {
-  for_each = local.origin_id
-  
-  comment = each.value.name
-}
+

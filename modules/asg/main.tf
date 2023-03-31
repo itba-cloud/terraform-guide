@@ -1,19 +1,3 @@
-# resource "aws_launch_configuration" "this" {
-#   image_id                     = "ami-0022f774911c1d690"
-#   instance_type           = var.instance_type
-#   security_groups = var.security_group_ids
-
-#   user_data = var.user_data
-#   # <<-EOF
-#   #           #!/bin/bash
-#   #           echo "Hello, World im instance" > index.html
-#   #           nohup busybox httpd -f -p ${var.web_server_port} &
-#   #           EOF
-
-#   lifecycle {
-#     create_before_destroy = true
-#   }
-# }
 resource "aws_launch_template" "this" {
   name_prefix =          "instance-"
   image_id                     = var.ami
@@ -27,7 +11,7 @@ resource "aws_launch_template" "this" {
   }
 }
 
-resource "aws_autoscaling_group" "example" {
+resource "aws_autoscaling_group" "this" {
   vpc_zone_identifier = var.subnet_ids
 
   target_group_arns = [var.lb_arn]

@@ -4,7 +4,7 @@ data "aws_route53_zone" "this" {
 
 resource "aws_acm_certificate" "this" {
   domain_name               = var.base_domain
-  subject_alternative_names = ["www.${var.app_domain}"]
+  subject_alternative_names = ["*.${var.app_domain}"]
   validation_method         = "DNS"
 }
 
@@ -14,7 +14,6 @@ resource "aws_route53_record" "validation" {
       name    = dvo.resource_record_name
       record  = dvo.resource_record_value
       type    = dvo.resource_record_type
-      zone_id = data.aws_route53_zone.this.id
     }
   }
 
@@ -23,7 +22,7 @@ resource "aws_route53_record" "validation" {
   records         = [each.value.record]
   ttl             = 60
   type            = each.value.type
-  zone_id         = each.value.zone_id
+  zone_id         = data.aws_route53_zone.this.zone_id
 }
 
 resource "aws_acm_certificate_validation" "this" {

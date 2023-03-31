@@ -9,13 +9,26 @@ locals {
   bucket_name = "web-site-${random_pet.this.id}"
 }
 
-data "aws_iam_policy_document" "site" {
-  statement {
-    sid = "PublicReadGetObject"
-    actions   = ["s3:GetObject"]
-    resources = ["arn:aws:s3:::${local.bucket_name}/*"]
-    effect = "Allow"
+# data "aws_iam_policy_document" "site" {
+#   statement {
+#     sid = "PublicReadGetObject"
+#     actions   = ["s3:GetObject"]
+#     resources = ["arn:aws:s3:::${local.bucket_name}/*"]
+#     effect = "Allow"
 
+#     principals {
+#       type        = "AWS"
+#       identifiers = var.bucket_access_OAI
+#     }
+#   }
+# }
+data "aws_iam_policy_document" "bucket_policy_document" {
+  statement {
+    actions = ["s3:GetObject"]
+    resources = [
+      module.site_bucket.s3_bucket_arn,
+      "${module.site_bucket.s3_bucket_arn}/*"
+    ]
     principals {
       type        = "AWS"
       identifiers = var.bucket_access_OAI
@@ -31,7 +44,7 @@ module "site_bucket" {
 
   # Bucket policies
   attach_policy = true
-  policy        = data.aws_iam_policy_document.site.json
+  policy        = data.aws_iam_policy_document.bucket_policy_document.json
   # attach_deny_insecure_transport_policy = true
   # attach_require_latest_tls_policy      = true
 
@@ -52,8 +65,6 @@ module "site_bucket" {
     index_document = "index.html"
     error_document = "error.html"
   }
-
-
   server_side_encryption_configuration = {
     rule = {
       apply_server_side_encryption_by_default = {
