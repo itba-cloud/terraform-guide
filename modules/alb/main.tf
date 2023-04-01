@@ -39,8 +39,8 @@ resource "aws_lb_target_group" "asg" {
 }
 
 resource "aws_lb_listener" "this" {
-  load_balancer_arn = "${aws_lb.this.id}"
-  port              = "80"
+  load_balancer_arn = aws_lb.this.arn
+  port              = 80
   protocol          = "HTTP"
 
   default_action {
