@@ -1,27 +1,3 @@
-# ---------------------------------------------------------------------------
-# Main resources - baseline configuration for s3
-# ---------------------------------------------------------------------------
-resource "random_pet" "this" {
-  length = 2
-}
-
-locals {
-  bucket_name = "web-site-${random_pet.this.id}"
-}
-
-# data "aws_iam_policy_document" "site" {
-#   statement {
-#     sid = "PublicReadGetObject"
-#     actions   = ["s3:GetObject"]
-#     resources = ["arn:aws:s3:::${local.bucket_name}/*"]
-#     effect = "Allow"
-
-#     principals {
-#       type        = "AWS"
-#       identifiers = var.bucket_access_OAI
-#     }
-#   }
-# }
 data "aws_iam_policy_document" "bucket_policy_document" {
   statement {
     actions = ["s3:GetObject"]
@@ -40,7 +16,7 @@ module "site_bucket" {
   source = "terraform-aws-modules/s3-bucket/aws"
 
   force_destroy = true
-  bucket        = local.bucket_name
+  bucket_prefix =  "tf-guide"
 
   # Bucket policies
   attach_policy = true

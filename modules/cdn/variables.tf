@@ -23,7 +23,7 @@ variable "aliases" {
   default = []
 }
 
-variable "certificate_arn" {
-  description = "ARN of the certificate associated with domain name"
-  type = string
-}
+# variable "certificate_arn" {
+#   description = "ARN of the certificate associated with domain name"
+#   type = string
+# }

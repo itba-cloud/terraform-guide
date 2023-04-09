@@ -33,7 +33,7 @@ resource "aws_cloudfront_distribution" "this" {
   is_ipv6_enabled     = false
   comment             = "cdn"
   default_root_object = "index.html"
-  aliases             = var.aliases
+  # aliases             = var.aliases
 
   default_cache_behavior {
     allowed_methods        = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
@@ -69,7 +69,6 @@ resource "aws_cloudfront_distribution" "this" {
     max_ttl                = 0
     compress               = true
     viewer_protocol_policy = "allow-all"
-
   }
 
 
@@ -80,11 +79,12 @@ resource "aws_cloudfront_distribution" "this" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = length(var.aliases) == 0
+    cloudfront_default_certificate = true
+    # cloudfront_default_certificate = length(var.aliases) == 0
 
-    acm_certificate_arn      = var.certificate_arn
-    minimum_protocol_version = length(var.aliases) > 0 ? "TLSv1.2_2021" : null
-    ssl_support_method       = length(var.aliases) > 0 ? "sni-only" : null
+    # acm_certificate_arn      = var.certificate_arn
+    # minimum_protocol_version = length(var.aliases) > 0 ? "TLSv1.2_2021" : null
+    # ssl_support_method       = length(var.aliases) > 0 ? "sni-only" : null
   }
 }
 

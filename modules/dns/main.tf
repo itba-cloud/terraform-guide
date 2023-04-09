@@ -4,11 +4,11 @@ data "aws_route53_zone" "this" {
 
 resource "aws_route53_record" "www" {
   zone_id = data.aws_route53_zone.this.zone_id
-  name    = "www.${var.app_domain}"
+  name    = "www.${var.base_domain}"
   type    = "CNAME"
   ttl     = 900
 
-  records = ["${var.app_domain}"]
+  records = ["${var.base_domain}"]
 
   depends_on = [
     aws_route53_record.base

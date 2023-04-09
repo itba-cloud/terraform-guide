@@ -8,10 +8,10 @@ variable "vpc_id" {
   type        = string
 }
 
-variable "certificate" {
-  description = "The certificate arn"
-  type        = string
-}
+# variable "certificate" {
+#   description = "The certificate arn"
+#   type        = string
+# }
 
 variable "domain_name" {
   description = "The VPC id"

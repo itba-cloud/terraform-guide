@@ -6,7 +6,7 @@ module "alb" {
   vpc_id              = module.vpc.vpc_id
   alb_name            = "web-server-lb"
   domain_name         = local.alb_domain_name
-  certificate         = module.certificate.arn
+  # certificate         = module.certificate.arn
 }
 
 resource "aws_security_group" "alb" {
