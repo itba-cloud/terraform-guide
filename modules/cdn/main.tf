@@ -17,17 +17,17 @@ resource "aws_cloudfront_distribution" "this" {
     }
   }
 
-  origin {
-    domain_name = var.alb_dns_name
-    origin_id   = var.alb_dns_name
+  # origin {
+  #   domain_name = var.alb_dns_name
+  #   origin_id   = var.alb_dns_name
 
-    custom_origin_config {
-      http_port              = 80
-      https_port             = 443
-      origin_protocol_policy = "http-only"
-      origin_ssl_protocols   = ["TLSv1.2"]
-    }
-  }
+  #   custom_origin_config {
+  #     http_port              = 80
+  #     https_port             = 443
+  #     origin_protocol_policy = "http-only"
+  #     origin_ssl_protocols   = ["TLSv1.2"]
+  #   }
+  # }
 
   enabled             = true
   is_ipv6_enabled     = false
@@ -41,35 +41,35 @@ resource "aws_cloudfront_distribution" "this" {
     target_origin_id       = var.bucket_id
     cache_policy_id        = data.aws_cloudfront_cache_policy.optimized.id
     viewer_protocol_policy = "redirect-to-https"
-    forwarded_values {
-      headers      = []
-      query_string = true
-      cookies {
-        forward = "all"
-      }
-    }
+    # forwarded_values {
+    #   headers      = []
+    #   query_string = true
+    #   cookies {
+    #     forward = "all"
+    #   }
+    # }
   }
 
-  ordered_cache_behavior {
-    path_pattern     = "/alb/*"
-    allowed_methods  = ["HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH"]
-    cached_methods   = ["GET", "HEAD", "OPTIONS"]
-    target_origin_id = var.alb_dns_name
+  # ordered_cache_behavior {
+  #   path_pattern     = "/alb/*"
+  #   allowed_methods  = ["HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH"]
+  #   cached_methods   = ["GET", "HEAD", "OPTIONS"]
+  #   target_origin_id = var.alb_dns_name
 
-    forwarded_values {
-      headers      = []
-      query_string = true
-      cookies {
-        forward = "all"
-      }
-    }
+  #   forwarded_values {
+  #     headers      = []
+  #     query_string = true
+  #     cookies {
+  #       forward = "all"
+  #     }
+  #   }
 
-    min_ttl                = 0
-    default_ttl            = 0
-    max_ttl                = 0
-    compress               = true
-    viewer_protocol_policy = "allow-all"
-  }
+  #   min_ttl                = 0
+  #   default_ttl            = 0
+  #   max_ttl                = 0
+  #   compress               = true
+  #   viewer_protocol_policy = "allow-all"
+  # }
 
 
   restrictions {

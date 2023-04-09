@@ -12,10 +12,10 @@ variable "bucket_id" {
   type = string
 }
 
-variable "alb_dns_name" {
-  description = "target dns name of the S3 bucket"
-  type = string
-}
+# variable "alb_dns_name" {
+#   description = "target dns name of the S3 bucket"
+#   type = string
+# }
 
 variable "aliases" {
   description = "Aliases for the distribution"
