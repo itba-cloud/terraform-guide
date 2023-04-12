@@ -3,8 +3,8 @@ locals {
         web-site = {
             name = "web-site"
         },
-        # alb = {
-        #     name = "alb"
-        # },
+        alb = {
+            name = "alb"
+        },
     }
 }
