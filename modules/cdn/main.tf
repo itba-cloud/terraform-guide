@@ -33,6 +33,7 @@ resource "aws_cloudfront_distribution" "this" {
   is_ipv6_enabled     = false
   comment             = "cdn"
   default_root_object = "index.html"
+  price_class         = "PriceClass_100"
   # aliases             = var.aliases
 
   default_cache_behavior {
@@ -51,19 +52,12 @@ resource "aws_cloudfront_distribution" "this" {
   }
 
   ordered_cache_behavior {
-    path_pattern     = "/alb/*"
+    path_pattern     = "/api/*"
     allowed_methods  = ["HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH"]
     cached_methods   = ["GET", "HEAD", "OPTIONS"]
     target_origin_id = var.alb_dns_name
     cache_policy_id  = data.aws_cloudfront_cache_policy.optimized.id
-
-    # forwarded_values {
-    #   headers      = []
-    #   query_string = true
-    #   cookies {
-    #     forward = "all"
-    #   }
-    # }
+ 
 
     min_ttl                = 0
     default_ttl            = 0
@@ -88,5 +82,6 @@ resource "aws_cloudfront_distribution" "this" {
     # ssl_support_method       = length(var.aliases) > 0 ? "sni-only" : null
   }
 }
+
 
 
