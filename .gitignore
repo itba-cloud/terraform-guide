@@ -34,4 +34,4 @@ override.tf.json
 terraform.rc
 
 *.zip
-!./resources/*.zip
+!/resources/*.zip
