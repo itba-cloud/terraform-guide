@@ -88,7 +88,8 @@
 
 ### 4.4 (adicional)
 
-- Levantar los buckets necesarios que vimos son necesarios para tener un static website. Intentar reutilizar la mayor cantidad de código posible.
+-   Definir el default cache behaviour para que redirija a HTTPS.
+-   Para ello, utilizar un certificado default de CloudFront.
 
 ## Content Delivery Network
 
@@ -113,8 +114,7 @@
 ## ADICIONAL
 
 ### A.1
-
-Vamos a modificar el ejercicio de computo para en lugar de generar dos recursos ec2 usar un `Autoscaling Group`.
+Vamos a modificar el ejercicio de computo para en lugar de generar dos recursos EC2 usar un `Autoscaling Group`.
 
 - Redefinir el codigo de las instancias previamente creadas y generar un `aws_launch_template`.
 - Definir el recurso `autoscaling_group` utilizando esta instancia.
