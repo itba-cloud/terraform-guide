@@ -1,0 +1,49 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Terraform Security
+
+on:
+  pull_request:
+
+jobs:
+  tfsec-run:
+    name: Run tfsec sarif report
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v3
+
+      - name: Run tfsec
+        uses: aquasecurity/tfsec-sarif-action@v0.1.3
+        with:
+          sarif_file: tfsec.sarif         
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v2
+        with: # Path to SARIF file relative to the root of the repository
+          sarif_file: tfsec.sarif
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  tf-comments:
+    name: Terraform Security PR commenter
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@master
+      - name: tfsec
+        uses: aquasecurity/tfsec-pr-commenter-action@1672d3f23fd98a39c30d0fb7d8d1b4f0967134bd
+        with:
+          working_directory: terraform/organization
+          tfsec_args: --exclude-path 'terraform/modules'
+          tfsec_formats: sarif,csv
+          soft_fail_commenter: true # Fails the check
+          github_token: ${{ github.token }}

@@ -1,0 +1,33 @@
+# ----------------------------------------------------------------------------------
+# Dependabot configurations:
+# Enable version updates for terraformm, looking for diferent files in every
+# specified directories, with a daily schedule and a security label
+# ---------------------------------------------------------------------------------- 
+
+version: 2
+updates:
+  # --------------------------------------------------------------
+  #  Looking for a `terraform.tf` file in the ORGANIZATION path
+  # -------------------------------------------------------------- 
+  - package-ecosystem: 'terraform'
+    directory: '/terraform/organization'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: "*"
+        update-types: ['version-update:semver-minor']
+    labels:
+      - 'security'
+
+  # ----------------------------------------------------------------------
+  # Check for workflow files in .github/workflows` path
+  # ---------------------------------------------------------------------- 
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: "*"
+        update-types: ['version-update:semver-minor']
+    labels:
+      - 'github-actions'
