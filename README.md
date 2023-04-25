@@ -2,6 +2,10 @@
 
 Para acceder a los ejercicios de la [Guía de Terraform](GUIDE.md).
 
+> Tener en cuenta que los archivos de resolución son de guía, y muchos pueden no cumplir con los estándares esperados para la materia **los cuales fueron explicados en clase**. Dicho de otra manera, tomar la resolución como ejemplo no como regla, a menos que se especifique explicitamente lo contrario.
+
+------------
+
 # Terraform
 
 Terraform es una herramienta de infraestructura como código (IaC) que permite crear y gestionar recursos de infraestructura en la nube de forma declarativa. En este repositorio se encuentran los archivos de configuración de Terraform para desplegar recursos en Amazon Web Services (AWS).
