@@ -1,0 +1,43 @@
+name: 'Terraform Format'
+
+on:
+  pull_request:
+  
+permissions:
+  id-token: write
+  contents: read
+  checks: write
+  actions: write
+  pull-requests: write
+
+jobs:
+  terraform-fmt:
+    name: 'Terraform Format'
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      TF_IN_AUTOMATION: true
+      EXPAND_SUMMARY_DETAILS: false
+
+    steps:
+      - name: Setup actions/checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          # cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+          terraform_version: 1.1.7
+
+      - name: Terraform Format
+        id: fmt
+        run: terraform fmt -check -recursive
+        continue-on-error: false
+
+      - name: Post Format
+        if: always() && github.ref != 'refs/heads/master' && (steps.fmt.outcome == 'success' || steps.fmt.outcome == 'failure')
+        uses: robburger/terraform-pr-commenter@v1
+        with:
+          commenter_type: fmt
+          commenter_input: ${{ format('{0}{1}', steps.fmt.outputs.stdout, steps.fmt.outputs.stderr) }}
+          commenter_exitcode: ${{ steps.fmt.outputs.exitcode }}
