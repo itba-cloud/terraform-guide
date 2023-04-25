@@ -12,7 +12,7 @@ module "asg" {
   asg_name =  "asg-web-server"
 }
 
-resource "aws_security_group" "this" {
+resource "aws_security_group" "main" {
   name = "allow_tcp_sg"
   vpc_id = module.vpc.vpc_id
   ingress {

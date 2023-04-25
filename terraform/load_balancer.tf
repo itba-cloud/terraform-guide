@@ -9,9 +9,10 @@ module "alb" {
   # certificate         = module.certificate.arn
 }
 
-resource "aws_security_group" "alb" {
+resource "aws_security_group" "main" {
   name          = "terraform-example-alb"
   vpc_id        = module.vpc.vpc_id
+ 
   # Allow inbound HTTP requests
   ingress {
     from_port   = 80
